@@ -4620,7 +4620,7 @@ function New-DM_HPDriverPack ()
                 }
 
                 Write-CMTraceLog -Message "Checking module version." -Component $Component -type 1 -Logfile $LogFile 
-                Invoke-ModuleVersionCheck -Module "DriverManagement"
+                # Invoke-ModuleVersionCheck -Module "HPDriverManagement"
 
                 $PlatformID = $($PlatformID.ToUpper())
 
