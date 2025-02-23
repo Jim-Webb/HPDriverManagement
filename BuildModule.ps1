@@ -17,7 +17,9 @@ $ParentDir = ($PSScriptRoot| Get-Item).BaseName
 
 $F = Import-PowerShellDataFile -Path ".\$ParentDir.psd1"
 
-Write-Output "Module version: $($f.ModuleVersion)"
+[version]$ModuleVersion = $($f.ModuleVersion)
+
+Write-Output "Module version: $ModuleVersion"
 
 If ($BuildModule)
 {
@@ -28,8 +30,8 @@ If ($CopyFile)
 {
     Foreach ($File in $CopyFile)
     {
-        Write-Output "Copying $file to $PSScriptRoot\Output\$ParentDir\$($f.ModuleVersion)"
-        Copy-Item -Path "$PSScriptRoot\$File" -Destination "$PSScriptRoot\Output\$ParentDir\$($f.ModuleVersion)" -Force
+        Write-Output "Copying $file to $PSScriptRoot\Output\$ParentDir\$ModuleVersion"
+        Copy-Item -Path "$PSScriptRoot\$File" -Destination "$PSScriptRoot\Output\$ParentDir\$ModuleVersion" -Force
     }
 }
 
@@ -38,7 +40,16 @@ If ($ChangeLog)
     If (Test-Path "$PSScriptRoot\$ChangeLog")
     {
         Write-Output "Adding release notes to $ParentDir.psd1"
-        Update-Metadata "$PSScriptRoot\Output\$ParentDir\$($f.ModuleVersion)\$ParentDir.psd1" -Property ReleaseNotes -Value (Get-Content "$PSScriptRoot\$ChangeLog" -Raw)
+
+        If (Test-Path "$PSScriptRoot\Output\$ParentDir\$ModuleVersion\$ParentDir.psd1")
+        {
+            Update-Metadata "$PSScriptRoot\Output\$ParentDir\$ModuleVersion\$ParentDir.psd1" -Property ReleaseNotes -Value (Get-Content "$PSScriptRoot\$ChangeLog" -Raw)
+        }
+        else
+        {
+            Write-Warning -Message "File `"$PSScriptRoot\Output\$ParentDir\$ModuleVersion\$ParentDir.psd1`" not found."
+        }
+        
     }
 }
 
@@ -68,13 +79,13 @@ If ($SignModule)
 
     # $Cert = Get-ChildItem Cert:\CurrentUser\My -CodeSigningCert | Where-Object {$_.FriendlyName -eq 'Current'}
 
-    Set-AuthenticodeSignature -FilePath "$PSScriptRoot\Output\$ParentDir\$($f.ModuleVersion)\$ParentDir.psd1" -Certificate $cert -TimestampServer http://timestamp.digicert.com
+    Set-AuthenticodeSignature -FilePath "$PSScriptRoot\Output\$ParentDir\$ModuleVersion\$ParentDir.psd1" -Certificate $cert -TimestampServer http://timestamp.digicert.com
     
-    Set-AuthenticodeSignature -FilePath "$PSScriptRoot\Output\$ParentDir\$($f.ModuleVersion)\$ParentDir.psm1" -Certificate $cert -TimestampServer http://timestamp.digicert.com
+    Set-AuthenticodeSignature -FilePath "$PSScriptRoot\Output\$ParentDir\$ModuleVersion\$ParentDir.psm1" -Certificate $cert -TimestampServer http://timestamp.digicert.com
 }
 
 If ($PublishModule)
 {
-    Write-Output "Publishing module $ParentDir version $($f.ModuleVersion) to repository."
-    Publish-Module -Path "$PSScriptRoot\Output\$ParentDir\$($f.ModuleVersion)" -NuGetApiKey *key* -Repository RepoName
+    Write-Output "Publishing module $ParentDir version $ModuleVersion to repository."
+    Publish-Module -Path "$PSScriptRoot\Output\$ParentDir\$ModuleVersion" -NuGetApiKey *key* -Repository RepoName
 }
