@@ -452,6 +452,27 @@ function Get-InstalledSoftware
 	}
 }
 #EndRegion '.\Private\Get-InstalledSoftware.ps1' 151
+#Region '.\Private\Get-JsonContent.ps1' -1
+
+function Get-JsonContent ($File)
+{
+    If (Test-Path $File)
+    {
+        try{
+            $Config = Get-Content $File | ConvertFrom-Json
+            return $Config
+        }
+        catch
+        {
+            Write-Warning "An error occured reading the Json file."
+        }
+    }
+    else
+    {
+        Write-Warning "File $File not found."
+    }
+}
+#EndRegion '.\Private\Get-JsonContent.ps1' 19
 #Region '.\Private\Helper-GetCallerPreference.ps1' -1
 
 function Helper-GetCallerPreference
