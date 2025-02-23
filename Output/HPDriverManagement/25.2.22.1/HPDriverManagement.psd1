@@ -107,7 +107,11 @@ PrivateData = @{
         # IconUri = ''
 
         # ReleaseNotes of this module
-        ReleaseNotes = ''
+        ReleaseNotes = '## [25.2.22.1] - 2025-02-22
+
+### Added
+- Initial public release
+'
 
         # External dependent modules of this module
         # ExternalModuleDependencies = @{ ExternalModuleDependencies = @('HPCMSL') }
