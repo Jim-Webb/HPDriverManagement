@@ -3623,7 +3623,7 @@ function Invoke-DM_HPRepositorySync ()
         Helper-GetCallerPreference -Cmdlet $PSCmdlet -SessionState $ExecutionContext.SessionState
 
         Write-CMTraceLog -Message "Checking module version." -Component $Component -type 1 -Logfile $LogFile 
-        Invoke-ModuleVersionCheck -Module "DriverManagement"
+        # Invoke-ModuleVersionCheck -Module "HPDriverManagement"
 
         # [bool]$Global:EnableLogWriteVerbose = $false
 
