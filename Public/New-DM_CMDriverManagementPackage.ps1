@@ -103,7 +103,7 @@ Function New-DM_CMDriverManagementPackage ()
         [string]$SiteServer,
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName)]
         [string]$SiteCode,
-        [string]$CMFolder = "$($SiteCode):\Package\OSD\HP\Testing",
+        [string]$CMFolder = "$($SiteCode):\Package\OSD\HP",
         [Switch]$Force,
         [Parameter(Mandatory=$false)]
         [string]$LogFile = "$env:ProgramData\Logs\$($myinvocation.mycommand).log"
@@ -219,8 +219,19 @@ Function New-DM_CMDriverManagementPackage ()
         
                         # Move package to correct folder
                         # Write-Verbose "Moving new packge to correct folder."
-                        Write-CMTraceLog -Message "Moving new packge to folder: $CMFolder." -Component $Component -type 1 -Logfile $LogFile 
-                        [void](Move-CMObject -InputObject $NewPackage -FolderPath $CMFolder -Verbose:$false)
+                        If (Test-path $CMFolder)
+                        {
+                            Write-CMTraceLog -Message "Moving new packge to folder: $CMFolder." -Component $Component -type 1 -Logfile $LogFile 
+                            [void](Move-CMObject -InputObject $NewPackage -FolderPath $CMFolder -Verbose:$false)
+                        }
+                        else
+                        {
+                            Write-CMTraceLog -Message "ConfigMgr folder $CMFolder does not exist. New package cannot be moved to non existant folder." -Component $Component -type 1 -Logfile $LogFile 
+                            Write-CMTraceLog -Message "New package $($NewPackage.Name) will need to be moved manually once folder path has been created." -Component $Component -type 1 -Logfile $LogFile 
+                            Write-Warning "ConfigMgr folder $CMFolder does not exist. New package cannot be moved to non existant folder."
+                            Write-Warning "New package $($NewPackage.Name) will need to be moved manually once folder path has been created."
+                        }
+
         
                         # Write-Verbose "Distributing contents of new package."
                         Write-CMTraceLog -Message "Distributing contents of new package." -Component $Component -type 1 -Logfile $LogFile 
