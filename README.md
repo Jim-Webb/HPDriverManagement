@@ -2,6 +2,7 @@ The HPDriverManagement module is a wrapper for the HPCMSL module from HP. The go
 the latest verion of ModuleBuilder did not work for me. I recommend version 3.1.0.
 
 [ModuleBuilder - Powershell Gallery](https://www.powershellgallery.com/packages/ModuleBuilder)
+
 [ModuleBuilder - GitHub](https://github.com/PoshCode/ModuleBuilder)
 
 ## How to build
