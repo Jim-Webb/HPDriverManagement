@@ -29,6 +29,10 @@ find-module modulebuilder -MaximumVersion 3.1.0 | Install-Module
 ```powershell
 .\BuildModule.ps1 -BuildModule
 ```
+If you want to incorporate the CHANGELOG file you would run this command:
+```powershell
+.\BuildModule.ps1 -BuildModule -ChangeLog .\CHANGELOG
+```
 5. The newly created module should be located in the .\Output\HPDriverManagement\currentversion\ directory
 6. Test importing the driver
 ```powershell
