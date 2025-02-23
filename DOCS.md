@@ -9,7 +9,7 @@ Below is an example of what you can put in your PowerShell profile script:
 
 ```powershell
 $PSDefaultParameterValues["*-DM*:SiteServer"] = "smsprov.corp.viamonstra.com"
-$PSDefaultParameterValues["*-DM*:SiteCode"] = "PS1"'
+$PSDefaultParameterValues["*-DM*:SiteCode"] = "PS1"
 $PSDefaultParameterValues["*-DM*:CMDBServer"] = "sccmdb.corp.viamonstra.com"
 $PSDefaultParameterValues["*-DM*:HPRepoPath"] = "\\corp.viamonstra.com\SourceFiles$\WorkstationDriverRepository"
 $PSDefaultParameterValues["*-DM*:PackageContentPath"] = "\\corp.viamonstra.com\SourceFiles$\OSD\Drivers\DriverPacks"
