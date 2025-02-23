@@ -12,7 +12,7 @@
 RootModule = 'HPDriverManagement'
 
 # Version number of this module.
-ModuleVersion = '25.2.22.01'
+ModuleVersion = '25.2.22.2'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
