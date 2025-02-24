@@ -1925,6 +1925,8 @@ Function Get-DM_HPRepositoryIncludeExclude ()
 
         $InformationPreference = 'Continue'
 
+        $PSDefaultParameterValues = $Global:PSDefaultParameterValues
+
         Write-CMTraceLog -Message "------ Start ------" -Component $Component -type 1 -Logfile $LogFile 
 
         If ((Invoke-PathPermissionsCheck -Path $HPRepoPath) -eq $false) { break }
@@ -1937,10 +1939,13 @@ Function Get-DM_HPRepositoryIncludeExclude ()
 
         $GlobalExcludePath = Join-Path $HPRepoPath -childpath $GlobalExclude
 
-        If (-Not $GlobalExcludePath)
+        Write-CMTraceLog -Message "Checking to see if $GlobalExcludePath exists." -Component $Component -type 1 -Logfile $LogFile
+        If (-Not (test-path $GlobalExcludePath))
         {
             Write-Warning "Global Include/Exclude file `"$GlobalExcludePath`" does not exist. Unable to continue."
             break
+            # Write-CMTraceLog -Message "Creating default $GlobalExcludePath file." -Component $Component -type 1 -Logfile $LogFile
+            # New-DM_HPRepositoryGlobalIncludeExcludeConfig -Status $Status
         }
 
         Write-CMTraceLog -Message "Global path: $GlobalExcludePath" -Component $Component -type 1 -Logfile $LogFile 
@@ -2074,7 +2079,7 @@ Function Get-DM_HPRepositoryIncludeExclude ()
 
     }
 }
-#EndRegion '.\Public\Get-DM_HPRepositoryIncludeExclude.ps1' 179
+#EndRegion '.\Public\Get-DM_HPRepositoryIncludeExclude.ps1' 184
 #Region '.\Public\Get-DM_PSProfileMods.ps1' -1
 
 Function Get-DM_PSProfileMods ()
