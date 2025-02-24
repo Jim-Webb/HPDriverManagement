@@ -8,11 +8,13 @@ The various cmdlets in the module have required parameters that need values supp
 Below is an example of what you can put in your PowerShell profile script:
 
 ```powershell
-$PSDefaultParameterValues["*-DM*:SiteServer"] = "smsprov.corp.viamonstra.com"
+$PSDefaultParameterValues["*-DM*:SiteServer"] = "cm01.corp.viamonstra.com"
 $PSDefaultParameterValues["*-DM*:SiteCode"] = "PS1"
-$PSDefaultParameterValues["*-DM*:CMDBServer"] = "sccmdb.corp.viamonstra.com"
-$PSDefaultParameterValues["*-DM*:HPRepoPath"] = "\\corp.viamonstra.com\SourceFiles$\WorkstationDriverRepository"
-$PSDefaultParameterValues["*-DM*:PackageContentPath"] = "\\corp.viamonstra.com\SourceFiles$\OSD\Drivers\DriverPacks"
+$PSDefaultParameterValues["*-DM*:CMDBServer"] = "cm01.corp.viamonstra.com"
+$PSDefaultParameterValues["*-DM*:HPRepoPath"] = "\\cm01\SourceFiles$\OSD\Drivers\DriverRepository"
+$PSDefaultParameterValues["*-DM*:PackageContentPath"] = "\\cm01\SourceFiles$\OSD\Drivers\DriverPacks"
+$PSDefaultParameterValues["*-DM*:DistributionPointGroupName"] = "All DPs"
+$PSDefaultParameterValues["*-DM*:CMFolder"] = "PS1:\Package\OSD\HP"
 
 $PSDefaultParameterValues["*-DM*:LogFile"] = "C:\ProgramData\Logs\DriverManagement.log"
 ```
@@ -70,6 +72,12 @@ Get-DM_HPRepository -PlatformID AAAA -OS Win11 -OSBuild 22H2 -Status Test
 
 ```powershell
 Get-DM_HPRepository -PlatformID AAAA -OS Win11 -OSBuild 22H2 -Status Test | New-DM_CMDriverManagementPackage -PackageType DriverRepository
+```
+
+### Create a new repository, sync it, then create a ConfigMgr package in one command
+
+```powershell
+New-DM_HPRepository -PlatformID AAA -OS Win11 -OSBuild 22H2 -Status Test -Category All -Force | Invoke-DM_HPRepositorySync -force | New-DM_CMDriverManagementPackage -PackageType DriverRepository -Force
 ```
 
 ### Copy a test driver repository to production
