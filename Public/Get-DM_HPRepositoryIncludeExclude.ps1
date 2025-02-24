@@ -41,7 +41,7 @@ Function Get-DM_HPRepositoryIncludeExclude ()
 
         If (-Not $GlobalExcludePath)
         {
-            Write-Warning "Global Include/Exclude file `"$GlobalExcludePath`" does not exist."
+            Write-Warning "Global Include/Exclude file `"$GlobalExcludePath`" does not exist. Unable to continue."
             break
         }
 
