@@ -39,6 +39,12 @@ Function Get-DM_HPRepositoryIncludeExclude ()
 
         $GlobalExcludePath = Join-Path $HPRepoPath -childpath $GlobalExclude
 
+        If (-Not $GlobalExcludePath)
+        {
+            Write-Warning "Global Include/Exclude file `"$GlobalExcludePath`" does not exist."
+            break
+        }
+
         Write-CMTraceLog -Message "Global path: $GlobalExcludePath" -Component $Component -type 1 -Logfile $LogFile 
 
         $GlobalExcludeJson = Get-JsonContent -File $GlobalExcludePath
