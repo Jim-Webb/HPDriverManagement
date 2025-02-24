@@ -4193,7 +4193,7 @@ Function New-DM_CMDriverManagementPackage ()
         [string]$SiteServer,
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName)]
         [string]$SiteCode,
-        [string]$CMFolder = "$($SiteCode):\Package\OSD\HP",
+        [string]$CMFolder,
         [Switch]$Force,
         [Parameter(Mandatory=$false)]
         [string]$LogFile = "$env:ProgramData\Logs\$($myinvocation.mycommand).log"
