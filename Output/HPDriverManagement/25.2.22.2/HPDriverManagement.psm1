@@ -200,6 +200,80 @@ function Check-DM_PreReqSoftware
         Write-CMTraceLog -Message "Copy completed." -Component $Component -type 1
     }
 #EndRegion '.\Private\Copy-FileWithProgress.ps1' 65
+#Region '.\Private\Format-Json.ps1' -1
+
+function Format-Json {
+    <#
+    .SYNOPSIS
+        Prettifies JSON output.
+    .DESCRIPTION
+        Reformats a JSON string so the output looks better than what ConvertTo-Json outputs.
+    .PARAMETER Json
+        Required: [string] The JSON text to prettify.
+    .PARAMETER Minify
+        Optional: Returns the json string compressed.
+    .PARAMETER Indentation
+        Optional: The number of spaces (1..1024) to use for indentation. Defaults to 4.
+    .PARAMETER AsArray
+        Optional: If set, the output will be in the form of a string array, otherwise a single string is output.
+    .EXAMPLE
+        $json | ConvertTo-Json  | Format-Json -Indentation 2
+
+        #https://stackoverflow.com/questions/56322993/proper-formating-of-json-using-powershell
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'Prettify')]
+    Param(
+        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+        [string]$Json,
+
+        [Parameter(ParameterSetName = 'Minify')]
+        [switch]$Minify,
+
+        [Parameter(ParameterSetName = 'Prettify')]
+        [ValidateRange(1, 1024)]
+        [int]$Indentation = 4,
+
+        [Parameter(ParameterSetName = 'Prettify')]
+        [switch]$AsArray
+    )
+
+    if ($PSCmdlet.ParameterSetName -eq 'Minify') {
+        return ($Json | ConvertFrom-Json) | ConvertTo-Json -Depth 100 -Compress
+    }
+
+    # If the input JSON text has been created with ConvertTo-Json -Compress
+    # then we first need to reconvert it without compression
+    if ($Json -notmatch '\r?\n') {
+        $Json = ($Json | ConvertFrom-Json) | ConvertTo-Json -Depth 100
+    }
+
+    $indent = 0
+    $regexUnlessQuoted = '(?=([^"]*"[^"]*")*[^"]*$)'
+
+    $result = $Json -split '\r?\n' |
+        ForEach-Object {
+            # If the line contains a ] or } character, 
+            # we need to decrement the indentation level unless it is inside quotes.
+            if ($_ -match "[}\]]$regexUnlessQuoted") {
+                $indent = [Math]::Max($indent - $Indentation, 0)
+            }
+
+            # Replace all colon-space combinations by ": " unless it is inside quotes.
+            $line = (' ' * $indent) + ($_.TrimStart() -replace ":\s+$regexUnlessQuoted", ': ')
+
+            # If the line contains a [ or { character, 
+            # we need to increment the indentation level unless it is inside quotes.
+            if ($_ -match "[\{\[]$regexUnlessQuoted") {
+                $indent += $Indentation
+            }
+
+            $line
+        }
+
+    if ($AsArray) { return $result }
+    return $result -Join [Environment]::NewLine
+}
+#EndRegion '.\Private\Format-Json.ps1' 72
 #Region '.\Private\Get-DM_HPPlatformIDIsValid.ps1' -1
 
 Function Get-DM_HPPlatformIDIsValid
@@ -1865,7 +1939,7 @@ Function Get-DM_HPRepositoryIncludeExclude ()
 
         If (-Not $GlobalExcludePath)
         {
-            Write-Warning "Global Include/Exclude file `"$GlobalExcludePath`" does not exist."
+            Write-Warning "Global Include/Exclude file `"$GlobalExcludePath`" does not exist. Unable to continue."
             break
         }
 
@@ -5300,6 +5374,92 @@ function New-DM_HPRepository ()
     }
 }
 #EndRegion '.\Public\New-DM_HPRepository.ps1' 282
+#Region '.\Public\New-DM_HPRepositoryGlobalIncludeExcludeConfig.ps1' -1
+
+Function New-DM_HPRepositoryGlobalIncludeExcludeConfig ()
+{
+
+    [CmdletBinding(SupportsShouldProcess=$True, ConfirmImpact = 'High')]
+    Param(
+    [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName)]
+    [ValidateSet("Test","Prod")]
+    [string]$Status = "Test",
+    [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName)]
+    [string]$HPRepoPath,
+    [Parameter(Mandatory=$false)]
+    [string]$LogFile = "$env:ProgramData\Logs\$($myinvocation.mycommand).log"
+    )
+
+    begin
+    {
+        $Component = $($myinvocation.mycommand)
+
+        $PSDefaultParameterValues = $Global:PSDefaultParameterValues
+
+        If ((Invoke-PathPermissionsCheck -Path $HPRepoPath) -eq $false) { break }
+
+        $ReturnValue = $false
+    }
+
+    process
+    {
+
+
+$JsonTemplate = @"
+{
+    "Win10": {
+        "Exclude": "HP Smart Health,HP Privacy Settings,HP Support Assistant,HP Sure Run,HP Sure Recover,HP Sure Recover agent,Cloud Recovery Client,Poly Lens,myHP with HP Presence,HP Collaboration Keyboard Software,HP Wolf Security Console,HP Wolf Security for Business",
+        "Modified": "04/21/2023",
+        "Author": "ViaMonstra\\Administrator"
+    },
+    "Win11": {
+        "Exclude": "HP Smart Health,HP Privacy Settings,HP Support Assistant,HP Sure Run,HP Sure Recover,HP Sure Recover agent,Cloud Recovery Client,Poly Lens,myHP with HP Presence,HP Collaboration Keyboard Software,HP Wolf Security Console,HP Wolf Security for Business",
+        "Modified": "04/21/2023",
+        "Author": "ViaMonstra\\Administrator"
+    }
+}
+"@
+
+            Write-CMTraceLog -Message "Checking for global include\exclude config file." -Component $Component -type 1 -Logfile $LogFile 
+            $ConfigFile = "$HPRepoPath\$Status\GlobalIncludeExclude.json"
+
+            Write-CMTraceLog -Message "Config file: $ConfigFile." -Component $Component -type 1 -Logfile $LogFile 
+
+            $SupportedOS = @('Win10','Win11')
+
+            If (-Not (Test-Path $ConfigFile))
+            {
+                if($PSCmdlet.ShouldProcess("$Status repo folder?", "Create HP global repository include\exclude file."))
+                {
+                    $Json = $JsonTemplate | ConvertFrom-Json -Verbose
+
+                    Foreach ($OS in $SupportedOS)
+                    {
+                        Write-CMTraceLog -Message "Adding date modified." -Component $Component -type 1 -Logfile $LogFile 
+                        ($Json.$OS).Modified = Get-Date -Format MM/dd/yyyy
+    
+                        Write-CMTraceLog -Message "Adding author." -Component $Component -type 1 -Logfile $LogFile 
+                        ($Json.$OS).Author = $(whoami)
+            
+                        Write-CMTraceLog -Message "Saving default Json to `"$ConfigFile`"." -Component $Component -type 1 -Logfile $LogFile 
+                        $Json | ConvertTo-Json -Depth 3 | Format-Json | Set-Content $ConfigFile
+            
+                        Write-CMTraceLog -Message "Process complete." -Component $Component -type 1 -Logfile $LogFile 
+                        $ReturnValue = $true
+                    }
+                }
+            }
+            else
+            {
+                Write-Warning "Config file `"$ConfigFile`" already exists."
+                Write-CMTraceLog -Message "Config file `"$ConfigFile`" already exists." -Component $Component -type 1 -Logfile $LogFile 
+                $ReturnValue = $false
+            }
+        
+    Return $ReturnValue
+    }
+}
+#EndRegion '.\Public\New-DM_HPRepositoryGlobalIncludeExcludeConfig.ps1' 84
 #Region '.\Public\New-DM_HPRepositoryIncludeExcludeConfig.ps1' -1
 
 Function New-DM_HPRepositoryIncludeExcludeConfig ()
