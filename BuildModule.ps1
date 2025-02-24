@@ -67,7 +67,7 @@ If ($SignModule)
         }
         elseif ($cert.count -gt 1)
         {
-            $GVResult = Get-ChildItem Cert:\CurrentUser\My -CodeSigningCert | select Thumbprint,Subject,NotAfter,FriendlyName | Out-GridView -Title "Select the correct certificate." -PassThru
+            $GVResult = Get-ChildItem Cert:\CurrentUser\My -CodeSigningCert | Select-Object Thumbprint,Subject,NotAfter,FriendlyName | Out-GridView -Title "Select the correct certificate." -PassThru
         
             $Cert = Get-ChildItem Cert:\CurrentUser\My -CodeSigningCert | Where-Object {$_.Thumbprint -eq $($GVResult.Thumbprint)}
         }
