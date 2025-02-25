@@ -125,15 +125,15 @@
         [Parameter(ParameterSetName='package',Mandatory=$True)]
         [Parameter(ParameterSetName = 'Default')]
         [switch]$CopyDP,
-        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName)]
-        [Parameter(ParameterSetName='package')]
-        [Parameter(ParameterSetName = 'Default')]
-        [switch]$CreatePackage,
-        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName)]
-        [Parameter(ParameterSetName='package')]
-        [Parameter(ParameterSetName = 'Default')]
-        [alias('SyncExistingPackage')]
-        [switch]$UpdateExistingPackage,
+        #[Parameter(Mandatory=$false,ValueFromPipelineByPropertyName)]
+        #[Parameter(ParameterSetName='package')]
+        #[Parameter(ParameterSetName = 'Default')]
+        #[switch]$CreatePackage,
+        #[Parameter(Mandatory=$false,ValueFromPipelineByPropertyName)]
+        #[Parameter(ParameterSetName='package')]
+        #[Parameter(ParameterSetName = 'Default')]
+        #[alias('SyncExistingPackage')]
+        #[switch]$UpdateExistingPackage,
         [bool]$Cleanup = $True,
         [Parameter(Mandatory=$True,ValueFromPipelineByPropertyName)]
         [string]$PackageContentPath,
