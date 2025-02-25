@@ -69,7 +69,7 @@ RequiredModules = @(@{ModuleName = 'HPCMSL' ; ModuleVersion = '1.8.1';})
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = @('Add-DM_HPRepositoryIncludeExclude','Get-DM_CMDriverManagementPackage','Get-DM_HPDriverPack','Get-DM_HPRepository','Get-DM_HPRepositoryIncludeExclude','Get-DM_PSProfileMods','Get-DM_SystemInformation','Invoke-DM_CMPackageDistribution','Invoke-DM_CreateHPIARefFile','Invoke-DM_HPDriverPackSyncToProd','Invoke-DM_HPIARefFileExclude','Invoke-DM_HPRepositoryExcludeCleanup','Invoke-DM_HPRepositorySync','Invoke-DM_HPRepositorySyncToProd','New-DM_CMDriverManagementPackage','New-DM_HPDriverPack','New-DM_HPRepository','New-DM_HPRepositoryGlobalIncludeExcludeConfig','New-DM_HPRepositoryIncludeExcludeConfig','Set-DM_CMDriverManagementPackage','Set-DM_HPRepositoryCategory','Update-DriverManagement')
+FunctionsToExport = @('Add-DM_HPRepositoryIncludeExclude','Get-DM_CMDriverManagementPackage','Get-DM_HPDriverPack','Get-DM_HPRepository','Get-DM_HPRepositoryIncludeExclude','Get-DM_PSProfileMods','Get-DM_SystemInformation','Invoke-DM_CMPackageDistribution','Invoke-DM_CreateHPIARefFile','Invoke-DM_HPDriverPackSyncToProd','Invoke-DM_HPIARefFileExclude','Invoke-DM_HPRepositoryExcludeCleanup','Invoke-DM_HPRepositorySync','Invoke-DM_HPRepositorySyncToProd','New-DM_CMDriverManagementPackage','New-DM_HPDriverPack copy','New-DM_HPDriverPack','New-DM_HPRepository','New-DM_HPRepositoryGlobalIncludeExcludeConfig','New-DM_HPRepositoryIncludeExcludeConfig','Set-DM_CMDriverManagementPackage','Set-DM_HPRepositoryCategory','Update-DriverManagement')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()
@@ -107,11 +107,17 @@ PrivateData = @{
         # IconUri = ''
 
         # ReleaseNotes of this module
-        ReleaseNotes = '## [25.2.22.1] - 2025-02-22
+        ReleaseNotes = '# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [25.2.22.1] - 2025-02-22
 
 ### Added
-- Initial public release
-'
+- Initial public release'
 
         # External dependent modules of this module
         # ExternalModuleDependencies = @{ ExternalModuleDependencies = @('HPCMSL') }
