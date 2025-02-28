@@ -46,9 +46,11 @@ The HP driver management module supports the concept of excluding unwanted files
 
 The Global file sits at the root of the Prod and Test folders. It's read and applied each time a platform model is synced. If you need to make specific include or excludes, you can also do that at the platform level. If something is excluded at the global level and included at the platform level, the platform level wins.
 
-The global file name is GlobalIncludeExclude.json and lives at the root of the test and prod folder.
+The global file name is GlobalIncludeExclude.json and lives at the root of the test and prod folder. New-DM_HPRepositoryGlobalIncludeExcludeConfig is used to create the file.
 
-The plaform file is named Exclude.json and lives under the .repsoitory folder in the plaform's repository.
+![Global Exclude json](Screenshots/GlobalIncludeExclude.png)
+
+The plaform file is named Exclude.json and lives under the .repsoitory folder in the plaform's repository. New-DM_HPRepositoryIncludeExcludeConfig is used to create the file.
 
 When the Invoke-DM_HPRepositorySync command is ran, the cleanup process runs after the sync completes. Anything the was remove is logged into one of two places, the file Exclude.log holds the info of the SP files that were removed from the repo. The XMLExclude.log file holds the info of what applications were removed from the reference image xml. The result is a XML file and repo that no longer contain the unwanted drivers or applications.
 
