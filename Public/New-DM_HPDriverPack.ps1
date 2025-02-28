@@ -111,20 +111,22 @@
         [string]$UnselectList,
         [string]$DriverRoot = "C:\Temp\Drivers",
         [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName)]
-        [Parameter(ParameterSetName = 'Compress')]
+        # [Parameter(ParameterSetName = 'Compress')]
         [Parameter(ParameterSetName = 'Default')]
         [switch]$Compress,
-        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName,ParameterSetName = 'Compress')]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName)]
         [Parameter(ParameterSetName = 'Default')]
         [ValidateSet("7Zip")]
         # [ValidateSet("7Zip", "Zip", "WIM")]
         [string]$CompressionMethod = '7Zip',
         [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName)]
         [switch]$Overwite,
+        <#
         [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName)]
         [Parameter(ParameterSetName='package',Mandatory=$True)]
         [Parameter(ParameterSetName = 'Default')]
         [switch]$CopyDP,
+        #>
         #[Parameter(Mandatory=$false,ValueFromPipelineByPropertyName)]
         #[Parameter(ParameterSetName='package')]
         #[Parameter(ParameterSetName = 'Default')]
@@ -165,6 +167,8 @@
 
         $DPDestination = Join-Path $PackageContentPath "HP"
 
+        $CopyDP = $true
+
         if(-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator'))
         {
             Write-Warning "When creating a HP Driver pack you must run Powershell with admin privileges. Please open an elevated Powershell prompt and try again."
@@ -196,7 +200,7 @@
 
         If ($CopyDP)
         {
-            Write-CMTraceLog -Message "CopyDP parameter passed, checking for write access to CMSource." -Component $Component -type 1 -Logfile $LogFile 
+            Write-CMTraceLog -Message "CopyDP parameter passed, checking for write access to $PackageContentPath." -Component $Component -type 1 -Logfile $LogFile 
             If ((Invoke-PathPermissionsCheck -Path $PackageContentPath) -eq $false) { break }
         }
 
@@ -484,7 +488,7 @@
                                                     Write-Information -MessageData "Copying 7-Zip files needed to decompress file to $DestPath." -InformationAction Continue
                                                     Copy-7ZipFiles -Path $DestPath
 
-                                                    If ($CreatePackage)
+                                                    <#If ($CreatePackage)
                                                     {
                                                         Write-CMTraceLog -Message "Creating new ConfigMgr package: `"DriverPack: HP $($PlatformID) $OS $OSBuild - $((Get-Culture).TextInfo.ToTitleCase($Status))`" at $DestPath." -Component $Component -type 1 -Logfile $LogFile 
                                                         Write-Information -MessageData "Creating new ConfigMgr package: `"DriverPack: HP $($PlatformID) $OS $OSBuild - $((Get-Culture).TextInfo.ToTitleCase($Status))`" at $DestPath." -InformationAction Continue
@@ -501,7 +505,7 @@
                                                         }
 
                                                         # Write-CMTraceLog -Message "NewPackageInfo $NewPackageInfo" -Component $Component -type 1 -Logfile $LogFile
-                                                    }
+                                                    } #>
                                                 }
 
                                                 # Write-Verbose "Copy driver pack support files..."
@@ -536,14 +540,14 @@
                                             'Status'=$((Get-Culture).TextInfo.ToTitleCase($Status))           
                                         }
 
-                                        If ($NewPackageInfo)
+                                        <#If ($NewPackageInfo)
                                         {
                                             # If $CreatePackage is true add needed values to the custom object before output.
                                             $props | Add-Member -MemberType NoteProperty -Name 'PackageID' -Value $NewPackageInfo.PackageID
                                             $props | Add-Member -MemberType NoteProperty -Name 'Name' -Value $NewPackageInfo.Name
                                             $props | Add-Member -MemberType NoteProperty -Name 'ObjectPath' -Value $NewPackageInfo.ObjectPath
                                             $props | Add-Member -MemberType NoteProperty -Name 'Version' -Value $NewPackageInfo.Version
-                                        }
+                                        } #>
 
                                         # Write-Verbose "Process complete."
                                         Write-CMTraceLog -Message "Process complete." -Component $Component -type 1 -Logfile $LogFile 
