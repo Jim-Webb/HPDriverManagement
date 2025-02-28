@@ -127,3 +127,12 @@ The Image Assistant reference files are used to control what is available for Im
 When using the HPDriverManagment module, the modification of the Image Assistant reference files is handled for you. The reference files for each model is stored in its driver repository.
 The format for the reference file's name is PlatformID_Architecture_OSVer.OSBuild.xml.
 
+### The part that's missing
+
+The part that I haven't added or documented yet is the task sequence part. What I'm using was heavily influenced by Gary Blok of garytown.com. 
+
+The DriverPack is extracted and is used by Windows setup to install the inf drivers.
+
+The repository is used to based on this post [Deploying HP Driver Updates with Image Assistant and ConfigMgr Task Sequences](https://garytown.com/deploying-hp-driver-updates-with-image-assistant-and-configmgr-task-sequences).
+
+I hope to share more on this as time permits.
