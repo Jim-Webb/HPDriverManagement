@@ -42,9 +42,11 @@ Get-DM_HPDriverPack -PlatformID AAAA -OS Win11 -OSBuild 22H2 -Status Prod | New-
 
 ### Include/Exclude process
 
-The HP driver management module supports the concept of excluding unwanted files from both the repository and the reference image XML file. This is useful if the repository and/or reference image XML file contain a driver or application that you don't want to be installed by Image Assistant. The way this works is there are 2 types of exlude files, Globa, and platform specific.
+The HP driver management module supports the concept of excluding unwanted files from both the repository and the reference image XML file. This is useful if the repository and/or reference image XML file contain a driver or application that you don't want to be installed by Image Assistant. The way this works is there are two types of exlude files, Global, and platform specific.
 
 The Global file sits at the root of the Prod and Test folders. It's read and applied each time a platform model is synced. If you need to make specific include or excludes, you can also do that at the platform level. If something is excluded at the global level and included at the platform level, the platform level wins.
+
+![Platform Exclude json](Screenshots/PlatformExclude.jpg)
 
 The global file name is GlobalIncludeExclude.json and lives at the root of the test and prod folder. New-DM_HPRepositoryGlobalIncludeExcludeConfig is used to create the file.
 
