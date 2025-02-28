@@ -23,7 +23,7 @@ $PSDefaultParameterValues["*-DM*:LogFile"] = "C:\ProgramData\Logs\DriverManageme
 
 ### Create a driver pack
 ```powershell
-New-DM_HPDriverPack -Platform AAAA -OS Win11 -OsVer 22H2 -Status Test -Compress -CreatePackage -CopyDP
+New-DM_HPDriverPack -Platform AAAA -OS Win11 -OsVer 22H2 -Status Test -Compress
 ```
 
 Copy a test DriverPack to production.
@@ -38,7 +38,23 @@ Get prod DriverPack info and use it to create a new DriverPack package
 Get-DM_HPDriverPack -PlatformID AAAA -OS Win11 -OSBuild 22H2 -Status Prod | New-DM_CMDriverManagementPackage -PackageType DriverPack
 ```
 
-## Driver Repositories 
+## Driver Repositories
+
+### Include/Exclude process
+
+The HP driver management module supports the concept of excluding unwanted files from both the repository and the reference image XML file. This is useful if the repository and/or reference image XML file contain a driver or application that you don't want to be installed by Image Assistant. The way this works is there are 2 types of exlude files, Globa, and platform specific.
+
+The Global file sits at the root of the Prod and Test folders. It's read and applied each time a platform model is synced. If you need to make specific include or excludes, you can also do that at the platform level. If something is excluded at the global level and included at the platform level, the platform level wins.
+
+The global file name is GlobalIncludeExclude.json and lives at the root of the test and prod folder.
+
+The plaform file is named Exclude.json and lives under the .repsoitory folder in the plaform's repository.
+
+When the Invoke-DM_HPRepositorySync command is ran, the cleanup process runs after the sync completes. Anything the was remove is logged into one of two places, the file Exclude.log holds the info of the SP files that were removed from the repo. The XMLExclude.log file holds the info of what applications were removed from the reference image xml. The result is a XML file and repo that no longer contain the unwanted drivers or applications.
+
+![Exclude process log files](Screenshots/ExcludeXMLExclude.PNG)
+
+It is worth noting that this include/exclude process will run at every sync since the missing files will be re-downloaded.
 
 ### Create a new HP Repository
 
