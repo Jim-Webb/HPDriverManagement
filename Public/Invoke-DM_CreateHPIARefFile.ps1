@@ -82,7 +82,7 @@ function Invoke-DM_CreateHPIARefFile ()
 
         $ConfirmPreference = 'None'
 
-        $HPRepoPath = Join-Path $HPRepoPath "HP"
+        # $HPRepoPath = Join-Path $HPRepoPath "HP"
     }
 
     Process
