@@ -81,6 +81,8 @@ function Invoke-DM_CreateHPIARefFile ()
         # Helper-GetCallerPreference -Cmdlet $PSCmdlet -SessionState $ExecutionContext.SessionState
 
         $ConfirmPreference = 'None'
+
+        $HPRepoPath = Join-Path $HPRepoPath "HP"
     }
 
     Process

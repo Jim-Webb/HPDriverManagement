@@ -109,6 +109,8 @@ function New-DM_HPRepository ()
             $ConfirmPreference = 'None'
         }
 
+        $HPRepoPath = Join-Path $HPRepoPath "HP"
+
         # [bool]$Global:EnableLogWriteVerbose = $false
 
         $CurrentLocation = Get-Location

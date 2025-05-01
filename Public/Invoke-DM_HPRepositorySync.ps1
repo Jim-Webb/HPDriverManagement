@@ -89,6 +89,8 @@ function Invoke-DM_HPRepositorySync ()
 
         $InformationPreference = 'Continue'
 
+        $HPRepoPath = Join-Path $HPRepoPath "HP"
+
         Helper-GetCallerPreference -Cmdlet $PSCmdlet -SessionState $ExecutionContext.SessionState
 
         Write-CMTraceLog -Message "Checking module version." -Component $Component -type 1 -Logfile $LogFile 

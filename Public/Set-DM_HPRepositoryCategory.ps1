@@ -84,6 +84,8 @@ Function Set-DM_HPRepositoryCategory ()
         Write-CMTraceLog -Message "Checking module version." -Component $Component -type 1 -Logfile $LogFile 
         # Invoke-ModuleVersionCheck -Module "DriverManagement"
     
+        $HPRepoPath = Join-Path $HPRepoPath "HP"
+
         # [bool]$Global:EnableLogWriteVerbose = $false
         
         $CurrentLocation = Get-Location

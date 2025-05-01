@@ -96,6 +96,8 @@ Function Invoke-DM_HPRepositorySyncToProd ()
 
             break
         }
+
+        $HPRepoPath = Join-Path $HPRepoPath "HP"
     }
 
     Process

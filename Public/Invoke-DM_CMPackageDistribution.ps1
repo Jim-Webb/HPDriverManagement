@@ -44,7 +44,7 @@ Function Invoke-DM_CMPackageDistribution ()
     [Parameter(Mandatory=$True,ValueFromPipeline,ValueFromPipelineByPropertyName, ParameterSetName='packageid')]
     [string]$PackageID,
     [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName)]
-    [string]$DistributionPointGroupName = 'All Content except Microsoft Patches (All DPs)',
+    [string]$DistributionPointGroupName,
     [Parameter(Mandatory=$True,ValueFromPipelineByPropertyName)]
     [string]$SiteServer,
     [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName)]

@@ -165,11 +165,11 @@ Function Set-DM_CMDriverManagementPackage ()
 
                 if ($PSBoundParameters.ContainsKey('UpdatePath'))
                 {
-                    if($PSCmdlet.ShouldProcess($ID,"Update path to $Path on $ID, OS $OS, and OSVer $OSBuild" + "?"))
+                    if($PSCmdlet.ShouldProcess($ID,"Update path to $UpdatePath on $ID, OS $OS, and OSVer $OSBuild" + "?"))
                     {
-                        Write-CMTraceLog -Message "Updating path to $Path." -Component $Component -type 1 -Logfile $LogFile 
-                        Write-Information -MessageData "Updating path to $Path." -InformationAction Continue
-                        [void](Set-CMPackage -InputObject $CMDriverManagementPackage -Path $Path -Verbose:$false)
+                        Write-CMTraceLog -Message "Updating path to $UpdatePath." -Component $Component -type 1 -Logfile $LogFile 
+                        Write-Information -MessageData "Updating path to $UpdatePath." -InformationAction Continue
+                        [void](Set-CMPackage -InputObject $CMDriverManagementPackage -Path $UpdatePath -Verbose:$false)
                     }
                 }
 

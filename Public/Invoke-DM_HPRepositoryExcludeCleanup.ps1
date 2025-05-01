@@ -30,6 +30,8 @@ Function Invoke-DM_HPRepositoryExcludeCleanup ()
         $PSDefaultParameterValues = $Global:PSDefaultParameterValues
 
         If ((Invoke-PathPermissionsCheck -Path $HPRepoPath) -eq $false) { break }
+
+        $HPRepoPath = Join-Path $HPRepoPath "HP"
     }
 
     Process

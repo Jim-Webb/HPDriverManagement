@@ -36,6 +36,8 @@ Function Add-DM_HPRepositoryIncludeExclude ()
         $ReturnValue = $false
 
         If ((Invoke-PathPermissionsCheck -Path $HPRepoPath) -eq $false) { break }
+
+        $HPRepoPath = Join-Path $HPRepoPath "HP"
     }
 
     Process

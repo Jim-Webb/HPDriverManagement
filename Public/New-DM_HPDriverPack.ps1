@@ -385,7 +385,28 @@
                                         }
                                         Else
                                         {
-                                            $HPDriverPackResult = New-HPDriverPack -Platform $PlatformID -OS $os -OSVer $OSBuild -Path $PlatformDriverPath -RemoveOlder
+                                            # This section needs more work. When working with a new model, the driver cmdlet from HP was generating an exception because of an \ in
+                                            # the name of one of the drivers. This only seemed to happen when I used the -RemoveOlder switch. My workaround is below. If the exception
+                                            # occurs, then we try the command again without the -RemoveOlder parameter.
+                                            try
+                                            {
+                                                Write-CMTraceLog -Message "Creating DriverPack using the RemoveOlder switch. $_" -Component $Component -Type 3 -Logfile $LogFile
+                                                $HPDriverPackResult = New-HPDriverPack -Platform $PlatformID -OS $os -OSVer $OSBuild -Path $PlatformDriverPath -RemoveOlder
+                                            }
+                                            catch [System.Management.Automation.CmdletInvocationException]
+                                            {
+                                                Write-Warning "An error occured creating the DriverPack, trying a different option."
+                                                Write-CMTraceLog -Message "An error occured creating the DriverPack, trying a different option." -Component $Component -Type 3 -Logfile $LogFile
+                                                Write-CMTraceLog -Message "Creating DriverPack without the RemoveOlder switch. $_" -Component $Component -Type 3 -Logfile $LogFile
+                                                $HPDriverPackResult = New-HPDriverPack -Platform $PlatformID -OS $os -OSVer $OSBuild -Path $PlatformDriverPath -ErrorAction SilentlyContinue
+                                            }
+                                            catch
+                                            {
+                                                Write-Warning "Oh snap! An error as occured creating the DriverPack. $_"
+                                                $Error[0]
+                                                Write-CMTraceLog -Message "Oh snap! An error as occured creating the DriverPack. $_" -Component $Component -Type 3 -Logfile $LogFile 
+                                                Get-ErrorInformation -incomingError $_
+                                            }
                                         }
                                         Write-CMTraceLog -Message "Driver pack result: $HPDriverPackResult." -Component $Component -type 1 -Logfile $LogFile 
                                         "Platform: $PlatformID`nFull OS: $FullOS`nOS Version: $OSBuild`nDate created: $((get-date).tostring())`nCreated by: $env:USERNAME" | out-file -FilePath "$PlatformDriverPath\DP$PlatformID\DriverInfo.txt"
