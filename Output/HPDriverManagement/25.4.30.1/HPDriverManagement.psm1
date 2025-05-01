@@ -1931,7 +1931,7 @@ Function Get-DM_HPRepositoryIncludeExclude ()
 
         $PSDefaultParameterValues = $Global:PSDefaultParameterValues
 
-        $HPRepoPath = Join-Path $HPRepoPath "HP"
+        # $HPRepoPath = Join-Path $HPRepoPath "HP"
 
         Write-CMTraceLog -Message "------ Start ------" -Component $Component -type 1 -Logfile $LogFile 
 
