@@ -7,7 +7,7 @@ Function Get-DM_PSProfileMods ()
     Write-Host  ""
     Write-Host  "###################################################################################"
     Write-host  '$PSDefaultParameterValues["*-DM*:SiteServer"] = "smsprov.corp.viamonstra.com"'
-    Write-host  '$PSDefaultParameterValues["*-DM*:SiteCode"] = "HOS"'
+    Write-host  '$PSDefaultParameterValues["*-DM*:SiteCode"] = "PS1"'
     write-host  '$PSDefaultParameterValues["*-DM*:CMDBServer"] = "sccmdb.corp.viamonstra.com"'
     write-host  '$PSDefaultParameterValues["*-DM*:HPRepoPath"] = "\\corp.viamonstra.com\SourceFiles$\WorkstationDriverRepository"'
     write-host  '$PSDefaultParameterValues["*-DM*:PackageContentPath"] = "\\corp.viamonstra.com\SourceFiles$\OSD\Drivers\DriverPacks"'
