@@ -8,3 +8,4 @@
 - Look into switching to a Prod/PreProd model instead of Prod/Test.
 - Document and give examples of how to use the driverpack and workstation repository packages in a task sequence.
 - Document and give examples of possible ways to store the model -> DriverPack and model -> DriverRepsoitory. i.e. MDTDB
+- Most likley remove the VPN check as it is very specific to my environment.
