@@ -36,9 +36,9 @@ Function Invoke-DM_HPIARefFileExclude ()
             }
         }
 
-        $HPRepoPath = Join-Path $HPRepoPath "HP"
-
         If ((Invoke-PathPermissionsCheck -Path $HPRepoPath) -eq $false) { break }
+
+        # $HPRepoPath = Join-Path $HPRepoPath "HP"
     }
 
     Process
